@@ -235,6 +235,8 @@ clients/
   common.py           rule executors, KMS drivers, KMS credentials
   demo.py             produce / consume / --no-kms CLI
   e2e_test.py         end-to-end assertions for both use cases
+scripts/
+  delete_deks.py      destroy-time helper: removes runtime-created DEKs so KEKs can be deleted
 Makefile              plan / apply / test / demo targets / destroy
 ```
 
@@ -245,6 +247,8 @@ Makefile              plan / apply / test / demo targets / destroy
 - **`403` creating the Key Vault key:** Azure RBAC propagation took longer than the built-in 60 s wait. Run `make plan && make apply` again.
 - **`401`/`403` from Kafka or Schema Registry right after apply:** new API keys and role bindings take a minute to propagate. Retry.
 - **`Failed to decrypt with all KEKs` / `AccessDenied` on the authorised consumer:** your AWS base credentials must be allowed to `sts:AssumeRole` into the client role (an admin SSO role is), and for Azure check that the role assignment on the key exists.
+
+- **`One or more references exist to the key` (42272) on destroy:** a KEK cannot be deleted while DEKs exist. The `terraform_data.dek_cleanup` resources delete them automatically; if you removed those, run `scripts/delete_deks.py` by hand.
 
 ## References
 

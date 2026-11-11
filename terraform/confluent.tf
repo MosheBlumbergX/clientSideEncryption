@@ -207,3 +207,46 @@ locals {
     secret = confluent_api_key.manager_sr.secret
   }
 }
+
+# ------------------------------------------------------------- DEK clean-up
+# Producers create DEKs at runtime, outside Terraform. Schema Registry will not
+# delete a KEK that still has DEKs, so on destroy we delete them first. Each
+# instance depends on its KEK, so Terraform destroys it (running the script)
+# before it destroys the KEK. Deleting a DEK is irreversible: data encrypted
+# with it can never be decrypted again (fine here, the topics go too).
+
+locals {
+  keks = merge(
+    var.enable_csfle ? { csfle = confluent_schema_registry_kek.csfle[0].name } : {},
+    var.enable_cspe ? { cspe = confluent_schema_registry_kek.cspe[0].name } : {},
+  )
+}
+
+resource "terraform_data" "dek_cleanup" {
+  for_each = local.keks
+
+  input = {
+    kek    = each.value
+    url    = local.sr_base.rest_endpoint
+    key    = confluent_api_key.manager_sr.id
+    secret = confluent_api_key.manager_sr.secret
+    script = "${path.module}/../scripts/delete_deks.py"
+  }
+
+  # Never replace this resource in place: replacement runs the destroy hook,
+  # and deleting live DEKs makes every existing message undecryptable.
+  lifecycle {
+    ignore_changes = [input]
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "python3 \"${self.input.script}\""
+    environment = {
+      SR_URL    = self.input.url
+      SR_KEY    = self.input.key
+      SR_SECRET = self.input.secret
+      KEK_NAME  = self.input.kek
+    }
+  }
+}
