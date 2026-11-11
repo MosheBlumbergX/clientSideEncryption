@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "Payment",
+  "namespace": "io.example.cspe",
+  "doc": "A payment event. The ENTIRE serialized payload is encrypted client-side (CSPE).",
+  "fields": [
+    { "name": "payment_id",  "type": "string" },
+    { "name": "customer_id", "type": "string" },
+    { "name": "amount",      "type": "double" },
+    { "name": "currency",    "type": "string" },
+    { "name": "merchant",    "type": "string" },
+    { "name": "iban",        "type": "string" },
+    { "name": "created_ts",  "type": { "type": "long", "logicalType": "timestamp-millis" } }
+  ]
+}

@@ -1,0 +1,27 @@
+# Copy to terraform.tfvars (git-ignored) and edit.
+
+# Every resource name starts with this. Use your name or handle.
+prefix = "yourname"
+
+# Deploy one or both demos.
+enable_csfle = true # field-level encryption, needs AWS
+enable_cspe  = true # payload encryption, needs Azure
+
+# Kafka cluster location.
+confluent_cloud  = "AWS"
+confluent_region = "eu-central-1"
+
+# AWS (CSFLE). null = default credential chain.
+aws_region  = "eu-central-1"
+# aws_profile = "my-sso-profile"
+
+# Azure (CSPE). null = az CLI default subscription / ARM_SUBSCRIPTION_ID.
+azure_location = "westeurope"
+# azure_subscription_id = "00000000-0000-0000-0000-000000000000"
+
+# Tags for every AWS and Azure resource (adjust to your org's policy).
+tags = {
+  owner      = "yourname"
+  project    = "client-side-encryption"
+  keep_until = "2030-01-01"
+}

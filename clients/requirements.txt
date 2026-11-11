@@ -1,0 +1,3 @@
+# CSPE needs confluent-kafka >= 2.11.1; CSFLE >= 2.4. The [rules] extra pulls in
+# tink + the AWS / Azure / GCP / Vault KMS SDKs used by the encryption executors.
+confluent-kafka[avro,schemaregistry,rules]==2.16.1

@@ -1,0 +1,45 @@
+# --- Secrets & local config -------------------------------------------------
+.env
+.env.*
+!.env.example
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+clients/config.json
+*.pem
+*.key
+
+# --- Terraform ----------------------------------------------------------------
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+# .terraform.lock.hcl is committed on purpose (pins provider versions).
+
+# --- Python -------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Editors / OS -------------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# --- Local notes not meant for the repo ------------------------------------
+References.md

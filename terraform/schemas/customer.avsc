@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "Customer",
+  "namespace": "io.example.csfle",
+  "doc": "A customer profile. Fields tagged PII are encrypted client-side (CSFLE).",
+  "fields": [
+    { "name": "customer_id", "type": "string" },
+    { "name": "full_name",   "type": "string" },
+    { "name": "country",     "type": "string" },
+    { "name": "email",       "type": "string", "confluent:tags": ["PII"] },
+    { "name": "ssn",         "type": "string", "confluent:tags": ["PII"] },
+    { "name": "card_number", "type": "string", "confluent:tags": ["PII"] },
+    { "name": "signup_ts",   "type": { "type": "long", "logicalType": "timestamp-millis" } }
+  ]
+}
